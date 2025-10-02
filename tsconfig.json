@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+  "module": "ESNext",
+    "skipLibCheck": true,
+  "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@/components/*": ["src/components/*"],
+      "@/pages/*": ["src/pages/*"],
+  "@/routes": ["src/routes"],
+  "@/routes/*": ["src/routes/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/types/*": ["src/types/*"],
+      "@/store/*": ["src/store/*"],
+      "@/shell/*": ["src/shell/*"]
+    }
+  },
+  "include": ["src"],
+  "references": []
+}

@@ -1,0 +1,51 @@
+{
+  "name": "plant-health-monitoring-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@tanstack/react-query": "^5.90.2",
+    "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.465.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-router-dom": "^6.26.2",
+    "sonner": "^1.7.4",
+    "tailwind-merge": "^2.5.3",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.1",
+    "@types/react": "^18.3.7",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
+    "@typescript-eslint/parser": "^8.6.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.12.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  },
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
+}
