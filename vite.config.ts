@@ -4,6 +4,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.JPG', '**/*.JPEG'],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

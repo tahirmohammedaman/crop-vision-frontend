@@ -22,7 +22,8 @@
       "@/lib/*": ["src/lib/*"],
       "@/types/*": ["src/types/*"],
       "@/store/*": ["src/store/*"],
-      "@/shell/*": ["src/shell/*"]
+      "@/shell/*": ["src/shell/*"],
+      "@/data/*": ["src/data/*"]
     }
   },
   "include": ["src"],
