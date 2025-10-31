@@ -6,6 +6,7 @@ import { HistoryPage } from '@/pages/history'
 import { PredictionDetailPage } from '@/pages/prediction-detail'
 import { StatsPage } from '@/pages/stats'
 import { ReviewQueuePage } from '@/pages/review-queue'
+import { ReviewDetailPage } from '@/pages/review-detail'
 import { CatalogPage } from '@/pages/catalog'
 import { DiseaseDetailPage } from '@/pages/disease-detail'
 import { ModelInfoPage } from '@/pages/model-info'
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
           { path: 'history/:id', element: <PredictionDetailPage /> },
           { path: 'stats', element: <StatsPage /> },
           { path: 'review', element: <ReviewQueuePage /> },
+          { path: 'review/:id', element: <ReviewDetailPage /> },
           { path: 'profile', element: <ProfilePage /> },
         ],
       },

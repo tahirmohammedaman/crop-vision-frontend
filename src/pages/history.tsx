@@ -68,7 +68,8 @@ function useDebounce<T>(value: T, delay = 350) {
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 
-function formatOrigin(origin: string) {
+function formatOrigin(origin?: string | null) {
+  if (!origin) return '—'
   return origin.replace(/_/g, ' ')
 }
 
@@ -91,7 +92,8 @@ function toConfidence(value: string): number | undefined {
   return Math.min(1, Math.max(0, num))
 }
 
-function formatConfidence(value: number): string {
+function formatConfidence(value?: number | null): string {
+  if (value == null) return '—'
   if (Number.isNaN(value)) return '—'
   if (value <= 1) return `${(value * 100).toFixed(1)}%`
   if (value <= 100) return `${value.toFixed(1)}%`
@@ -334,7 +336,19 @@ export function HistoryPage() {
             <Badge variant="outline" className="capitalize">{formatOrigin(item.origin)}</Badge>
           </TableCell>
           <TableCell className="text-sm">
-            {item.confirmed == null ? <span className="text-muted-foreground">Pending</span> : item.confirmed ? <Badge variant="secondary">Confirmed</Badge> : <Badge variant="destructive">Incorrect</Badge>}
+            {(() => {
+              const corrected = item.corrected_label && item.corrected_label !== item.predicted_label
+              if (corrected) {
+                return <Badge variant="destructive">Corrected</Badge>
+              }
+              if (item.confirmed) {
+                return <Badge className="bg-emerald-600 text-white hover:bg-emerald-600/90">Confirmed</Badge>
+              }
+              if (item.confirmed === false) {
+                return <Badge variant="destructive">Incorrect</Badge>
+              }
+              return <span className="text-muted-foreground">Pending</span>
+            })()}
           </TableCell>
           <TableCell className="text-right">
             <Button variant="ghost" size="sm" onClick={(event) => {

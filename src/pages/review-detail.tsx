@@ -5,13 +5,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Progress } from '@/components/ui/progress'
 import type { PredictionHistoryItem } from '@/types/dto'
 import { historyApi, mediaApi, reviewApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
-import { Progress } from '@/components/ui/progress'
 import { diseaseLabels } from '@/data/diseases-catalog'
 import { toast } from 'sonner'
-import { ReviewActions, statusBadge, describeError } from '@/pages/review-detail'
 
 function formatDateTime(value?: string | null) {
   if (!value) return '—'
@@ -33,13 +32,107 @@ function formatConfidence(value?: number | null) {
   return value.toFixed(2)
 }
 
+export function statusBadge(item: PredictionHistoryItem) {
+  const corrected = item.corrected_label && item.corrected_label !== item.predicted_label
+  if (corrected) {
+    return <Badge variant="destructive">Corrected</Badge>
+  }
+  if (item.confirmed) {
+    return <Badge className="bg-emerald-600 text-white hover:bg-emerald-600/90">Confirmed</Badge>
+  }
+  if (item.confirmed === false) {
+    return <Badge variant="destructive">Incorrect</Badge>
+  }
+  return <Badge variant="secondary">Pending review</Badge>
+}
+
 function usePredictionFromState() {
   const location = useLocation()
   const state = location.state as { item?: PredictionHistoryItem } | undefined
   return state?.item
 }
 
-export function PredictionDetailPage() {
+export function describeError(error: unknown): string {
+  if (error instanceof Error) return error.message
+  if (typeof error === 'string') return error
+  return 'Something went wrong. Please try again.'
+}
+
+type ReviewActionsProps = {
+  item: PredictionHistoryItem
+  selectedDisease: string
+  onSelectedDiseaseChange: (value: string) => void
+  isSubmitting: boolean
+  feedbackError: string | null
+  feedbackSuccess: string | null
+  alreadyReviewed: boolean
+  diseases: string[]
+  onMarkCorrect: () => void
+  onSubmitCorrection: () => void
+}
+
+export function ReviewActions({
+  item,
+  selectedDisease,
+  onSelectedDiseaseChange,
+  isSubmitting,
+  feedbackError,
+  feedbackSuccess,
+  alreadyReviewed,
+  diseases,
+  onMarkCorrect,
+  onSubmitCorrection,
+}: ReviewActionsProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Review actions</CardTitle>
+        <CardDescription>Make a decision on this prediction. Actions are disabled after review.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span>Current status:</span>
+          {statusBadge(item)}
+        </div>
+        {feedbackError && <p className="text-sm text-destructive">{feedbackError}</p>}
+        {feedbackSuccess && <p className="text-sm text-emerald-600">{feedbackSuccess}</p>}
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" onClick={onMarkCorrect} disabled={isSubmitting || alreadyReviewed}>
+            Mark as correct
+          </Button>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={onSubmitCorrection}
+            disabled={isSubmitting || alreadyReviewed || !selectedDisease}
+          >
+            Submit correction
+          </Button>
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs font-medium uppercase text-muted-foreground" htmlFor="corrected-label">
+            Corrected disease
+          </label>
+          <select
+            id="corrected-label"
+            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            value={selectedDisease}
+            onChange={(event) => onSelectedDiseaseChange(event.target.value)}
+            disabled={alreadyReviewed}
+          >
+            <option value="">Select disease</option>
+            {diseases.map((disease) => (
+              <option key={disease} value={disease}>{disease}</option>
+            ))}
+          </select>
+          {!diseases.length && <p className="text-xs text-muted-foreground">No diseases available in the catalog.</p>}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+export function ReviewDetailPage() {
   const navigate = useNavigate()
   const params = useParams<{ id: string }>()
   const stateItem = usePredictionFromState()
@@ -83,7 +176,7 @@ export function PredictionDetailPage() {
       {
         label: 'Image key',
         value: item.image_url ? (
-          <span className="font-mono text-xs leading-relaxed text-muted-foreground break-all">{item.image_url}</span>
+          <span className="break-all font-mono text-xs leading-relaxed text-muted-foreground">{item.image_url}</span>
         ) : (
           '—'
         ),
@@ -117,7 +210,7 @@ export function PredictionDetailPage() {
       } catch (err) {
         if (cancelled) return
         setItem(null)
-        setError(err instanceof Error ? err.message : 'Failed to load prediction details.')
+        setError(describeError(err))
       } finally {
         if (!cancelled) setIsLoading(false)
       }
@@ -172,8 +265,6 @@ export function PredictionDetailPage() {
     }
   }, [item?.corrected_label])
 
-  const alreadyReviewed = item != null && (item.confirmed != null || (item.corrected_label != null && item.corrected_label !== item.predicted_label))
-
   const handleFeedback = React.useCallback(async (isCorrect: boolean) => {
     if (!item) return
     if (!isCorrect && !selectedDisease) {
@@ -185,7 +276,9 @@ export function PredictionDetailPage() {
     setFeedbackError(null)
     setFeedbackSuccess(null)
     try {
-      const payload = isCorrect ? { is_correct: true } : { is_correct: false, corrected_label: selectedDisease }
+      const payload = isCorrect
+        ? { is_correct: true }
+        : { is_correct: false, corrected_label: selectedDisease }
       await reviewApi.submitFeedback(item.id, payload)
 
       let nextItem: PredictionHistoryItem | null = null
@@ -212,18 +305,19 @@ export function PredictionDetailPage() {
       setFeedbackSuccess(successMessage)
       toast.success(successMessage)
     } catch (err) {
-      const message = describeError(err)
-      setFeedbackError(message)
-      toast.error(message)
+      setFeedbackError(describeError(err))
+      toast.error(describeError(err))
     } finally {
       setIsSubmitting(false)
     }
   }, [item, selectedDisease])
 
+  const alreadyReviewed = item != null && (item.confirmed != null || (item.corrected_label != null && item.corrected_label !== item.predicted_label))
+
   if (!params.id || Number.isNaN(numericId)) {
     return (
       <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">Prediction detail</h1>
+        <h1 className="text-2xl font-semibold">Review detail</h1>
         <Card>
           <CardContent className="py-6 text-sm text-destructive">The provided prediction id is invalid.</CardContent>
         </Card>
@@ -236,10 +330,10 @@ export function PredictionDetailPage() {
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Prediction #{numericId}</h1>
-          <p className="text-sm text-muted-foreground">Inspect the complete record, including device metadata and review outcomes.</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Review prediction #{numericId}</h1>
+          <p className="text-sm text-muted-foreground">Confirm the original prediction or submit a corrected diagnosis.</p>
         </div>
-        <Button variant="outline" onClick={() => navigate(-1)}>Back to history</Button>
+        <Button variant="outline" onClick={() => navigate(-1)}>Back to queue</Button>
       </div>
 
       {isLoading ? (
@@ -264,7 +358,7 @@ export function PredictionDetailPage() {
             <Card className="overflow-hidden">
               <CardHeader>
                 <CardTitle className="text-lg">Overview</CardTitle>
-                <CardDescription>Full payload returned by the history endpoint for this prediction.</CardDescription>
+                <CardDescription>Data returned by the history endpoint for this prediction.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-3">
@@ -316,7 +410,7 @@ export function PredictionDetailPage() {
             <ReviewActions
               item={item}
               selectedDisease={selectedDisease}
-              onSelectedDiseaseChange={(value: string) => {
+              onSelectedDiseaseChange={(value) => {
                 setSelectedDisease(value)
                 setFeedbackError(null)
                 setFeedbackSuccess(null)
@@ -333,7 +427,7 @@ export function PredictionDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Probability distribution</CardTitle>
-                <CardDescription>Confidence values across all reported classes.</CardDescription>
+                <CardDescription>Confidence values across all classes reported by the model.</CardDescription>
               </CardHeader>
               <CardContent>
                 {probabilityEntries.length ? (
@@ -352,7 +446,7 @@ export function PredictionDetailPage() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">No class probabilities were included with this record.</p>
+                  <p className="text-sm text-muted-foreground">No class probabilities were provided.</p>
                 )}
               </CardContent>
             </Card>
@@ -361,7 +455,7 @@ export function PredictionDetailPage() {
           <Card className="overflow-hidden">
             <CardHeader>
               <CardTitle className="text-lg">Specimen image</CardTitle>
-              <CardDescription>Fetched from the media endpoint using the stored image key.</CardDescription>
+              <CardDescription>Retrieved from the media endpoint using the stored image key.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {isImageLoading ? (

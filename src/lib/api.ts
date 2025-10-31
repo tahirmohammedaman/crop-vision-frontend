@@ -10,7 +10,7 @@ import type {
   PredictionResponse,
   FeedbackCreate,
   FeedbackItem,
-  FeedbackReviewRequest,
+  FeedbackRequest,
   HistoryFilters,
   Crop,
   Disease,
@@ -152,12 +152,15 @@ export const modelApi = {
 }
 
 export const reviewApi = {
-  async list(params?: { status?: string; page?: number; page_size?: number }): Promise<Paginated<FeedbackItem>> {
-    const res = await http.get<Paginated<FeedbackItem>>('/predictions/feedback', { params })
+  async queue(params?: HistoryQueryParams): Promise<PaginatedResponse<PredictionHistoryItem>> {
+    const res = await http.get<PaginatedResponse<PredictionHistoryItem>>('/v1/review/queue', {
+      params: normalizeHistoryParams(params),
+      paramsSerializer: { indexes: null },
+    })
     return res.data
   },
-  async act(data: FeedbackReviewRequest): Promise<FeedbackItem> {
-    const res = await http.post<FeedbackItem>('/predictions/feedback/review', data)
+  async submitFeedback(predictionId: number, data: FeedbackRequest): Promise<PredictionHistoryItem> {
+    const res = await http.post<PredictionHistoryItem>(`/v1/predictions/${predictionId}/feedback`, data)
     return res.data
   },
 }

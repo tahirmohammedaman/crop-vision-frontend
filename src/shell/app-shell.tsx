@@ -26,10 +26,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <nav className="flex items-center gap-4 text-sm">
             <NavLink to="/upload" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Upload</NavLink>
             <NavLink to="/history" className={({ isActive }) => (isActive ? 'text-primary' : '')}>History</NavLink>
-            <NavLink to="/stats" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Stats</NavLink>
+            {/* <NavLink to="/stats" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Stats</NavLink> */}
             <NavLink to="/review" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Review</NavLink>
             <NavLink to="/catalog" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Catalog</NavLink>
-            <NavLink to="/model" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Model</NavLink>
+            {/* <NavLink to="/model" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Model</NavLink> */}
           </nav>
           <div className="flex items-center gap-2">
             <Button
