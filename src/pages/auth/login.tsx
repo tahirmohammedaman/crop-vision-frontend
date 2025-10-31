@@ -72,7 +72,7 @@ export function LoginPage() {
         </button>
         <CardHeader className="pb-4">
           <CardTitle>Sign in</CardTitle>
-          <CardDescription>Access your Plant Health account</CardDescription>
+          <CardDescription>Access your CropVision account</CardDescription>
         </CardHeader>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-3">

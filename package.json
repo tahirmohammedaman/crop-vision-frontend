@@ -1,5 +1,5 @@
 {
-  "name": "plant-health-monitoring-client",
+  "name": "cropvision-client",
   "private": true,
   "version": "0.1.0",
   "type": "module",

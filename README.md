@@ -1,6 +1,6 @@
-# Plant Health Monitoring – Web Client
+# CropVision – Web Client
 
-A React + TypeScript + Tailwind + shadcn/ui frontend for a Plant Health Monitoring backend.
+A React + TypeScript + Tailwind + shadcn/ui frontend for the CropVision backend.
 
 ## Tech stack
 - Vite + React + TypeScript
@@ -24,7 +24,7 @@ A React + TypeScript + Tailwind + shadcn/ui frontend for a Plant Health Monitori
 
 ## Environment
 - `VITE_API_BASE_URL` – base URL to backend
-- `VITE_TOKEN_STORAGE_KEY` – storage key for tokens (default `phm.token`)
+- `VITE_TOKEN_STORAGE_KEY` – storage key for tokens (default `cropvision.token`)
 
 ## Pages
 - Landing, Login, Register, Upload, History, Stats, Review Queue, Catalog, Model Info, Profile

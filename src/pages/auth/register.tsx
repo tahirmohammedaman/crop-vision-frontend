@@ -40,7 +40,7 @@ export function RegisterPage() {
       <Card>
         <CardHeader>
           <CardTitle>Create account</CardTitle>
-          <CardDescription>Join Plant Health to start predicting diseases</CardDescription>
+          <CardDescription>Join CropVision to start monitoring crop health</CardDescription>
         </CardHeader>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-3">

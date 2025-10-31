@@ -25,7 +25,7 @@ import type {
 } from '@/types/dto'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-const TOKEN_KEY = import.meta.env.VITE_TOKEN_STORAGE_KEY || 'phm.token'
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_STORAGE_KEY || 'cropvision.token'
 
 export const AUTH_EVENTS = {
   LOGOUT: 'phm-auth-logout',

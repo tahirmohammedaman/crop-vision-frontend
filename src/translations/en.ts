@@ -1,7 +1,7 @@
 export const en = {
   app: {
-    name: "Plant Health Monitoring",
-    tagline: "Detect plant diseases in seconds"
+    name: "CropVision",
+    tagline: "AI-powered crop health insights"
   },
   nav: {
     upload: "Upload",

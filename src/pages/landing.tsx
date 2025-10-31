@@ -4,9 +4,10 @@ import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Accordion } from '@/components/ui/accordion'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Link } from 'react-router-dom'
 import * as React from 'react'
+import heroPreview from '@/../catalog-data/Tomato___Leaf_Mold.jpg'
 
 export function LandingPage() {
   const [stats, setStats] = React.useState(() => ({
@@ -15,12 +16,6 @@ export function LandingPage() {
     cropsTracked: 14,
     diseasesDetected: 38,
   }))
-  React.useEffect(() => {
-    const id = setInterval(() => {
-      setStats((s) => ({ ...s, imagesToday: s.imagesToday + Math.floor(Math.random() * 5) }))
-    }, 1500)
-    return () => clearInterval(id)
-  }, [])
 
   const faq = [
     { id: '1', header: 'How accurate is the model?', content: 'We achieve 99.2% average accuracy on our benchmark datasets and continue improving with user feedback.' },
@@ -66,7 +61,14 @@ export function LandingPage() {
             <CardDescription>See how a prediction result looks.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="aspect-video w-full rounded-md bg-gradient-to-br from-emerald-400/20 via-lime-400/10 to-transparent" />
+            <div className="relative aspect-video w-full overflow-hidden rounded-md">
+              <img
+                src={heroPreview}
+                alt="CropVision prediction preview"
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
             <div className="rounded-md border p-3">
               <div className="flex items-center justify-between">
                 <div className="font-medium">Tomato Leaf Mold</div>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Scan } from 'lucide-react'
 import { useTranslation } from '@/translations/translation-provider'
 
 import { Button } from '@/components/ui/button'
@@ -25,15 +25,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col">
       <header className="border-b">
         <div className="container flex h-14 items-center justify-between">
-          <Link to="/" className="font-semibold">🌿 {t.app.name}</Link>
+          <Link to="/" className="flex items-center gap-2 font-semibold">
+            <Scan className="h-5 w-5 text-primary" aria-hidden />
+            <span>{t.app.name}</span>
+          </Link>
           <nav className="flex items-center gap-4 text-sm">
-            <NavLink to="/upload" className={({ isActive }) => (isActive ? 'text-primary' : '')}>{t.nav.upload}</NavLink>
-            <NavLink to="/history" className={({ isActive }) => (isActive ? 'text-primary' : '')}>{t.nav.history}</NavLink>
-            {/* <NavLink to="/stats" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Stats</NavLink> */}
-            <NavLink to="/review" className={({ isActive }) => (isActive ? 'text-primary' : '')}>{t.nav.review}</NavLink>
-            <NavLink to="/devices" className={({ isActive }) => (isActive ? 'text-primary' : '')}>{t.nav.devices}</NavLink>
-            <NavLink to="/catalog" className={({ isActive }) => (isActive ? 'text-primary' : '')}>{t.nav.catalog}</NavLink>
-            {/* <NavLink to="/model" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Model</NavLink> */}
+            <NavLink to="/upload" className={({ isActive }) => (isActive ? 'text-primary font-semibold' : 'font-medium')}>{t.nav.upload}</NavLink>
+            <NavLink to="/history" className={({ isActive }) => (isActive ? 'text-primary font-semibold' : 'font-medium')}>{t.nav.history}</NavLink>
+            <NavLink to="/review" className={({ isActive }) => (isActive ? 'text-primary font-semibold' : 'font-medium')}>{t.nav.review}</NavLink>
+            <NavLink to="/devices" className={({ isActive }) => (isActive ? 'text-primary font-semibold' : 'font-medium')}>{t.nav.devices}</NavLink>
+            <NavLink to="/catalog" className={({ isActive }) => (isActive ? 'text-primary font-semibold' : 'font-medium')}>{t.nav.catalog}</NavLink>
           </nav>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
