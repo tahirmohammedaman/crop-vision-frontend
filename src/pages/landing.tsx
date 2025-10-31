@@ -7,7 +7,7 @@ import { Accordion } from '@/components/ui/accordion'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Link } from 'react-router-dom'
 import * as React from 'react'
-import heroPreview from '@/../catalog-data/Tomato___Leaf_Mold.jpg'
+import heroPreview from '@/../catalog-data/tomato_leaf_mold_hero.jpg'
 
 export function LandingPage() {
   const [stats, setStats] = React.useState(() => ({

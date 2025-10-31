@@ -17,6 +17,7 @@
     "paths": {
       "@/components/*": ["src/components/*"],
       "@/pages/*": ["src/pages/*"],
+      "@/translations/*": ["src/translations/*"],
   "@/routes": ["src/routes"],
   "@/routes/*": ["src/routes/*"],
       "@/lib/*": ["src/lib/*"],
