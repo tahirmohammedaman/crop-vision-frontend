@@ -26,10 +26,10 @@ export function RegisterPage() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const token = await authApi.register(values)
-      setAuth(token)
-      toast.success('Registered')
-      navigate('/upload')
+  const token = await authApi.register(values)
+  setAuth(token)
+  toast.success('Registered')
+  navigate('/upload', { replace: true })
     } catch (e: any) {
       toast.error(e?.response?.data?.detail ?? 'Register failed')
     }

@@ -72,10 +72,11 @@ export interface PredictionConfidence {
 }
 
 export interface PredictionCreate {
-  image: File
+  file: File
   tags?: string[]
-  metadata?: Record<string, unknown>
-  run_async?: boolean
+  origin?: 'server_web' | 'server_edge' | 'device_offline' | string
+  device_id?: string
+  device_local_timestamp?: string
 }
 
 export interface PredictionItem {
@@ -94,10 +95,14 @@ export interface PredictionItem {
 }
 
 export interface PredictionResponse {
-  prediction: PredictionItem
-  model_info?: ModelInfo | null
-  disease_detail?: Disease | null
-  raw_scores?: Record<string, number>
+  id: string
+  predicted_class: string
+  confidence: number
+  classes?: string[]
+  probabilities?: Record<string, number>
+  image_url?: string | null
+  origin?: string | null
+  tags?: string[]
 }
 
 export interface FeedbackCreate {
@@ -146,6 +151,60 @@ export interface HistoryFilters {
   sort_order?: 'asc' | 'desc'
   uploader_id?: string
   query?: string
+}
+
+export type PredictionOrigin = 'server_web' | 'server_edge' | 'device_offline' | (string & {})
+
+export interface PredictionHistoryUser {
+  id: number
+  username: string
+}
+
+export interface PredictionHistoryItem {
+  id: number
+  created_at: string
+  predicted_label: string
+  predicted_confidence: number
+  corrected_label?: string | null
+  confirmed?: boolean | null
+  confirmed_at?: string | null
+  image_url: string
+  crop: string
+  tags: string[]
+  origin: PredictionOrigin
+  device_id?: string | null
+  device_local_timestamp?: string | null
+  probabilities?: Record<string, number> | null
+  user_id?: number | null
+  user?: PredictionHistoryUser | null
+}
+
+export interface PaginatedResponse<T> {
+  total: number
+  items: T[]
+}
+
+export interface HistoryQueryParams {
+  skip?: number
+  limit?: number
+  crop?: string | null
+  disease?: string | null
+  tags?: string[]
+  min_confidence?: number
+  max_confidence?: number
+  start_date?: string | null
+  end_date?: string | null
+  confirmed?: boolean | null
+  origin?: PredictionOrigin | null
+  device_id?: string | null
+  search?: string | null
+}
+
+export interface PredictionDetail extends PredictionHistoryItem {}
+
+export interface FeedbackRequest {
+  is_correct: boolean
+  corrected_label?: string | null
 }
 
 export interface StatsTimePoint {
