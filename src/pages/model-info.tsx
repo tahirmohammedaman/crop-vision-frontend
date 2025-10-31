@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatDateTimeLocal } from '@/lib/utils'
 
 export function ModelInfoPage() {
   const model = {
@@ -25,7 +26,7 @@ export function ModelInfoPage() {
           <div><span className="text-muted-foreground">Classes:</span> <span className="font-medium">{model.classes_count}</span></div>
           <div><span className="text-muted-foreground">Top-k:</span> <span className="font-medium">{model.top_k}</span></div>
           <div className="sm:col-span-2"><span className="text-muted-foreground">Checksum:</span> <span className="font-medium">{model.checksum}</span></div>
-          <div><span className="text-muted-foreground">Created:</span> <span className="font-medium">{new Date(model.created_at).toLocaleString()}</span></div>
+          <div><span className="text-muted-foreground">Created:</span> <span className="font-medium">{formatDateTimeLocal(model.created_at)}</span></div>
           <div className="sm:col-span-2">
             <div className="font-medium">Notes</div>
             <p className="text-muted-foreground">{model.notes}</p>

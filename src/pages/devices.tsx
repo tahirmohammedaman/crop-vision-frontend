@@ -22,7 +22,7 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { devicesApi } from '@/lib/api'
 import type { Device, DeviceMetrics, DeviceRegistrationResponse } from '@/types/dto'
-import { cn } from '@/lib/utils'
+import { cn, formatDateLocal, formatDateTimeLocal, formatTimeLocal, toDate } from '@/lib/utils'
 import { toast } from 'sonner'
 
 type DeviceForm = {
@@ -39,31 +39,38 @@ const createEmptyForm = (): DeviceForm => ({
   tags: [],
 })
 
-function formatDateTime(value?: string | null) {
-  if (!value) return '—'
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  return date.toLocaleString()
+const ONLINE_THRESHOLD_MINUTES = 21
+
+type LastSeenStatus = {
+  isOnline: boolean
+  label: string
+  timestampText: string
 }
 
-function formatLastSeen(value?: string | null) {
-  if (!value) return '—'
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
+function getLastSeenStatus(value?: string | null): LastSeenStatus {
+  if (!value) return { isOnline: false, label: '—', timestampText: '—' }
+  const date = toDate(value)
+  if (!date) {
+    const fallback = typeof value === 'string' ? value : '—'
+    return { isOnline: false, label: fallback, timestampText: fallback }
+  }
 
   const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const thresholdMs = ONLINE_THRESHOLD_MINUTES * 60 * 1000
   const isSameDay =
     date.getFullYear() === now.getFullYear() &&
     date.getMonth() === now.getMonth() &&
     date.getDate() === now.getDate()
 
-  const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
-  if (isSameDay) {
-    return `Today at ${time}`
+  const time = formatTimeLocal(date)
+  const timestampText = isSameDay ? `Today at ${time}` : `${formatDateLocal(date)} ${time}`
+
+  if (Math.abs(diffMs) <= thresholdMs) {
+    return { isOnline: true, label: 'Online', timestampText }
   }
 
-  const datePart = date.toLocaleDateString()
-  return `${datePart} ${time}`
+  return { isOnline: false, label: timestampText, timestampText }
 }
 
 function formatPercent(value?: number | null) {
@@ -420,7 +427,7 @@ export function DevicesPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-            <span>Registered at {formatDateTime(registration.created_at)}</span>
+            <span>Registered at {formatDateTimeLocal(registration.created_at)}</span>
             <Button type="button" variant="ghost" size="sm" onClick={() => setRegistration(null)}>Dismiss</Button>
           </CardFooter>
         </Card>
@@ -457,6 +464,7 @@ export function DevicesPage() {
             {devices.map((device) => {
               const tags = formatTags(device.tags)
               const metrics = buildMetrics(device.last_metrics)
+              const lastSeen = getLastSeenStatus(device.last_seen)
               return (
                 <Card key={device.id} className="h-full">
                   <CardHeader className="space-y-3">
@@ -468,9 +476,14 @@ export function DevicesPage() {
                             {device.is_active ? 'Active' : 'Inactive'}
                           </Badge>
                         </CardTitle>
-                        <CardDescription className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <CardDescription
+                          className={cn(
+                            'flex items-center gap-1 text-xs',
+                            lastSeen.isOnline ? 'font-semibold text-emerald-600' : 'text-muted-foreground'
+                          )}
+                        >
                           <Clock3 className="h-3.5 w-3.5" aria-hidden />
-                          Last seen {formatLastSeen(device.last_seen)}
+                          {lastSeen.isOnline ? lastSeen.label : `Last seen ${lastSeen.label}`}
                         </CardDescription>
                       </div>
                       {device.location && (
@@ -501,9 +514,9 @@ export function DevicesPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2 text-sm">
                       <p className="text-xs font-medium uppercase text-muted-foreground">Created</p>
-                      <p>{formatDateTime(device.created_at)}</p>
+                      <p>{formatDateTimeLocal(device.created_at)}</p>
                       <p className="text-xs font-medium uppercase text-muted-foreground">Updated</p>
-                      <p>{formatDateTime(device.updated_at)}</p>
+                      <p>{formatDateTimeLocal(device.updated_at)}</p>
                     </div>
                     {tags.length > 0 && (
                       <div className="space-y-2">
@@ -542,7 +555,9 @@ export function DevicesPage() {
                     )}
                   </CardContent>
                   <CardFooter className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-                    <span>Last updated {formatLastSeen(device.last_seen)}</span>
+                    <span className={cn(lastSeen.isOnline && 'font-semibold text-emerald-600')}>
+                      {lastSeen.timestampText}
+                    </span>
                     <span>ID #{device.id}</span>
                   </CardFooter>
                 </Card>

@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDateTimeLocal } from '@/lib/utils'
 import { historyApi, metadataApi } from '@/lib/api'
 import type { PredictionHistoryItem } from '@/types/dto'
 
@@ -323,7 +323,7 @@ export function HistoryPage() {
       const corrected = item.corrected_label && item.corrected_label !== item.predicted_label ? item.corrected_label : null
       return (
         <TableRow key={item.id} className="cursor-pointer" onClick={() => navigate(`/history/${item.id}`, { state: { item } })}>
-          <TableCell className="whitespace-nowrap text-sm">{new Date(item.created_at).toLocaleString()}</TableCell>
+          <TableCell className="whitespace-nowrap text-sm">{formatDateTimeLocal(item.created_at)}</TableCell>
           <TableCell className="text-sm font-medium">{item.crop}</TableCell>
           <TableCell className="text-sm">
             <div className="flex flex-col gap-1">

@@ -10,7 +10,7 @@ import * as React from 'react'
 
 export function LandingPage() {
   const [stats, setStats] = React.useState(() => ({
-    imagesToday: Math.floor(300 + Math.random() * 400),
+    imagesToday: 76,
     accuracy: 99.2,
     cropsTracked: 14,
     diseasesDetected: 38,
@@ -23,7 +23,7 @@ export function LandingPage() {
   }, [])
 
   const faq = [
-    { id: '1', header: 'How accurate is the model?', content: 'We routinely achieve 90–96% top-1 accuracy on our benchmark datasets and continue improving with community feedback.' },
+    { id: '1', header: 'How accurate is the model?', content: 'We achieve 99.2% average accuracy on our benchmark datasets and continue improving with user feedback.' },
     { id: '2', header: 'Which crops are supported?', content: 'Common crops like tomato, potato, maize, wheat, rice, and more. The catalog lists all supported crops and diseases.' },
   { id: '3', header: 'Is my data private?', content: 'Uploads are processed securely. Reach out to the platform administrator if you need help managing your history.' },
   ]
@@ -50,7 +50,7 @@ export function LandingPage() {
               <div className="text-2xl font-semibold tabular-nums">{stats.imagesToday.toLocaleString()}</div>
             </div>
             <div className="rounded-md border p-3">
-              <div className="text-xs text-muted-foreground">Top-1 accuracy</div>
+              <div className="text-xs text-muted-foreground">Model accuracy</div>
               <div className="text-2xl font-semibold">{stats.accuracy}%</div>
               <Progress value={stats.accuracy} className="mt-2" />
             </div>
@@ -76,7 +76,7 @@ export function LandingPage() {
             </div>
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="rounded-md border p-2"><span className="text-muted-foreground">Crop</span><div className="font-medium">Tomato</div></div>
-              <div className="rounded-md border p-2"><span className="text-muted-foreground">Top-k</span><div className="font-medium">3</div></div>
+              <div className="rounded-md border p-2"><span className="text-muted-foreground">Casual agent</span><div className="font-medium">Fungus</div></div>
               <div className="rounded-md border p-2"><span className="text-muted-foreground">Latency</span><div className="font-medium">230ms</div></div>
             </div>
           </CardContent>

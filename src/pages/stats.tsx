@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { formatDateLocal } from '@/lib/utils'
 
 export function StatsPage() {
   const days = Array.from({ length: 7 }).map((_, i) => ({
-    date: new Date(Date.now() - (6 - i) * 864e5).toLocaleDateString(),
+    date: formatDateLocal(new Date(Date.now() - (6 - i) * 864e5)),
     count: Math.floor(50 + Math.random() * 120),
   }))
   const total = days.reduce((a, b) => a + b.count, 0)

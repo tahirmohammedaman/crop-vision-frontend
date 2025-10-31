@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import type { PredictionHistoryItem } from '@/types/dto'
 import { reviewApi } from '@/lib/api'
+import { formatDateTimeLocal } from '@/lib/utils'
 
 const PAGE_SIZE = 10
 
@@ -112,7 +113,7 @@ export function ReviewQueuePage() {
           className="cursor-pointer"
           onClick={() => navigate(`/review/${item.id}`, { state: { item } })}
         >
-          <TableCell className="whitespace-nowrap text-sm">{new Date(item.created_at).toLocaleString()}</TableCell>
+          <TableCell className="whitespace-nowrap text-sm">{formatDateTimeLocal(item.created_at)}</TableCell>
           <TableCell className="text-sm font-medium">{item.crop}</TableCell>
           <TableCell className="text-sm">
             <div className="flex flex-col gap-1">

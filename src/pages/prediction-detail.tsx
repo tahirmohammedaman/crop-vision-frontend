@@ -7,18 +7,11 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { PredictionHistoryItem } from '@/types/dto'
 import { historyApi, mediaApi, reviewApi } from '@/lib/api'
-import { cn } from '@/lib/utils'
+import { cn, formatDateTimeLocal } from '@/lib/utils'
 import { Progress } from '@/components/ui/progress'
 import { diseaseLabels } from '@/data/diseases-catalog'
 import { toast } from 'sonner'
 import { ReviewActions, statusBadge, describeError } from '@/pages/review-detail'
-
-function formatDateTime(value?: string | null) {
-  if (!value) return '—'
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  return date.toLocaleString()
-}
 
 function formatOrigin(origin?: string | null) {
   if (!origin) return '—'
@@ -72,12 +65,12 @@ export function PredictionDetailPage() {
       { label: 'Predicted label', value: item.predicted_label },
       { label: 'Corrected label', value: item.corrected_label ? item.corrected_label : '—' },
       { label: 'Confidence', value: formatConfidence(item.predicted_confidence) },
-      { label: 'Created at', value: formatDateTime(item.created_at) },
-      { label: 'Device timestamp', value: formatDateTime(item.device_local_timestamp) },
+  { label: 'Created at', value: formatDateTimeLocal(item.created_at) },
+  { label: 'Device timestamp', value: formatDateTimeLocal(item.device_local_timestamp) },
       { label: 'Device ID', value: item.device_id ?? '—' },
       { label: 'Origin', value: formatOrigin(item.origin) },
       { label: 'Confirmed', value: item.confirmed == null ? 'Pending review' : item.confirmed ? 'Yes' : 'No' },
-      { label: 'Confirmed at', value: item.confirmed_at ? formatDateTime(item.confirmed_at) : '—' },
+  { label: 'Confirmed at', value: item.confirmed_at ? formatDateTimeLocal(item.confirmed_at) : '—' },
       { label: 'Uploader', value: item.user?.username ?? '—' },
       { label: 'Uploader ID', value: item.user_id ?? '—' },
       {
