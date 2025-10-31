@@ -1,48 +1,53 @@
 import * as React from 'react'
-import type { TokenResponse, User } from '@/types/dto'
+import type { TokenResponse } from '@/types/dto'
 import { AUTH_EVENTS } from '@/lib/api'
 
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_STORAGE_KEY || 'phm.token'
 
 type AuthState = {
   token: string | null
-  user: User | null
+  username: string | null
 }
 
 type AuthContextType = {
   isAuthenticated: boolean
   isLoading: boolean
   token: string | null
-  user: User | null
-  setAuth: (t: TokenResponse | null, user?: User | null) => void
+  username: string | null
+  setAuth: (t: TokenResponse | null) => void
   logout: () => void
 }
 
 const AuthContext = React.createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const initialToken = React.useMemo(() => {
-    if (typeof window === 'undefined') return null
+  const initialState = React.useMemo<AuthState>(() => {
+    if (typeof window === 'undefined') {
+      return { token: null, username: null }
+    }
     try {
       const raw = localStorage.getItem(TOKEN_KEY)
-      if (!raw) return null
+      if (!raw) return { token: null, username: null }
       const parsed = JSON.parse(raw) as TokenResponse
-      return parsed.access_token ?? null
+      return {
+        token: parsed.access_token ?? null,
+        username: parsed.username ?? null,
+      }
     } catch {
-      return null
+      return { token: null, username: null }
     }
   }, [])
 
-  const [state, setState] = React.useState<AuthState>({ token: initialToken, user: null })
+  const [state, setState] = React.useState<AuthState>(initialState)
   const [isLoading] = React.useState<boolean>(false)
 
-  const setAuth = React.useCallback((t: TokenResponse | null, user?: User | null) => {
+  const setAuth = React.useCallback((t: TokenResponse | null) => {
     if (t?.access_token) {
       localStorage.setItem(TOKEN_KEY, JSON.stringify(t))
-      setState({ token: t.access_token, user: user ?? null })
+      setState({ token: t.access_token, username: t.username ?? null })
     } else {
       localStorage.removeItem(TOKEN_KEY)
-      setState({ token: null, user: null })
+      setState({ token: null, username: null })
     }
   }, [])
 
@@ -65,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated: !!state.token,
         isLoading,
         token: state.token,
-        user: state.user,
+        username: state.username,
         setAuth,
         logout,
       }}

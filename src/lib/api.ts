@@ -19,6 +19,9 @@ import type {
   PaginatedResponse,
   PredictionHistoryItem,
   HistoryQueryParams,
+  DeviceListResponse,
+  DeviceCreateRequest,
+  DeviceRegistrationResponse,
 } from '@/types/dto'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
@@ -230,6 +233,23 @@ export const mediaApi = {
   async fetchImage(path: string): Promise<Blob> {
     const sanitized = path.startsWith('/') ? path.slice(1) : path
     const res = await http.get<Blob>(`/v1/${sanitized}`, { responseType: 'blob' })
+    return res.data
+  },
+}
+
+export const devicesApi = {
+  async list(): Promise<DeviceListResponse> {
+    const res = await http.get<DeviceListResponse>('/v1/devices')
+    return res.data
+  },
+  async register(data: DeviceCreateRequest): Promise<DeviceRegistrationResponse> {
+    const payload = {
+      name: data.name,
+      location: data.location ?? null,
+      device_id: data.device_id ?? null,
+      tags: (data.tags ?? []).map((tag) => tag.trim()).filter((tag) => tag.length > 0),
+    }
+    const res = await http.post<DeviceRegistrationResponse>('/v1/devices', payload)
     return res.data
   },
 }

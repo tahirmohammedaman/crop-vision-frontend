@@ -25,7 +25,7 @@ export function LandingPage() {
   const faq = [
     { id: '1', header: 'How accurate is the model?', content: 'We routinely achieve 90–96% top-1 accuracy on our benchmark datasets and continue improving with community feedback.' },
     { id: '2', header: 'Which crops are supported?', content: 'Common crops like tomato, potato, maize, wheat, rice, and more. The catalog lists all supported crops and diseases.' },
-    { id: '3', header: 'Is my data private?', content: 'Uploads are processed securely. You can delete your history anytime from the Profile page.' },
+  { id: '3', header: 'Is my data private?', content: 'Uploads are processed securely. Reach out to the platform administrator if you need help managing your history.' },
   ]
 
   return (

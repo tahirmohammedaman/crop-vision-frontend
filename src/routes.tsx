@@ -10,7 +10,7 @@ import { ReviewDetailPage } from '@/pages/review-detail'
 import { CatalogPage } from '@/pages/catalog'
 import { DiseaseDetailPage } from '@/pages/disease-detail'
 import { ModelInfoPage } from '@/pages/model-info'
-import { ProfilePage } from '@/pages/profile'
+import { DevicesPage } from '@/pages/devices'
 import { AppShell } from '@/shell/app-shell'
 import { ProtectedLayout } from '@/routes/protected-layout'
 
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
           { path: 'stats', element: <StatsPage /> },
           { path: 'review', element: <ReviewQueuePage /> },
           { path: 'review/:id', element: <ReviewDetailPage /> },
-          { path: 'profile', element: <ProfilePage /> },
+          { path: 'devices', element: <DevicesPage /> },
         ],
       },
       { path: 'login', element: <LoginPage /> },

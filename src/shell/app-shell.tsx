@@ -8,10 +8,10 @@ import { useAuth } from '@/store/auth'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const theme = React.useContext(ThemeContext)!
-  const { isAuthenticated, user, logout } = useAuth()
+  const { isAuthenticated, username, logout } = useAuth()
   const navigate = useNavigate()
 
-  const displayName = user?.full_name || user?.username || 'Account'
+  const greeting = username ? `Hi, ${username}!` : 'Hi!'
 
   const handleLogout = () => {
     logout()
@@ -28,6 +28,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <NavLink to="/history" className={({ isActive }) => (isActive ? 'text-primary' : '')}>History</NavLink>
             {/* <NavLink to="/stats" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Stats</NavLink> */}
             <NavLink to="/review" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Review</NavLink>
+            <NavLink to="/devices" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Devices</NavLink>
             <NavLink to="/catalog" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Catalog</NavLink>
             {/* <NavLink to="/model" className={({ isActive }) => (isActive ? 'text-primary' : '')}>Model</NavLink> */}
           </nav>
@@ -42,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Button>
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
-                <Link to="/profile" className="text-sm font-medium">{displayName}</Link>
+                <span className="text-sm font-medium">{greeting}</span>
                 <Button size="sm" variant="outline" onClick={handleLogout}>Logout</Button>
               </div>
             ) : (

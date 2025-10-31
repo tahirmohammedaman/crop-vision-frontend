@@ -20,6 +20,7 @@ export interface TokenResponse {
   token_type: 'bearer' | string
   expires_in?: number
   refresh_token?: string
+  username?: string
 }
 
 export interface LoginRequest {
@@ -230,4 +231,43 @@ export interface ErrorResponse {
   detail?: string
   code?: string | number
   errors?: Record<string, unknown> | Array<{ loc?: string[]; msg: string; type?: string }>
+}
+
+export interface DeviceMetrics {
+  cpu_percent: number
+  mem_percent: number
+  disk_percent: number
+  temp_c?: number | null
+  uptime_seconds?: number | null
+  camera_status?: string | null
+  extra?: Record<string, unknown> | null
+}
+
+export interface Device {
+  id: number
+  device_id: string
+  name: string
+  location?: string | null
+  tags: string[]
+  is_active: boolean
+  last_seen?: string | null
+  last_metrics?: DeviceMetrics | null
+  created_at: string
+  updated_at: string
+}
+
+export interface DeviceListResponse {
+  total: number
+  items: Device[]
+}
+
+export interface DeviceCreateRequest {
+  name: string
+  location?: string | null
+  tags?: string[] | null
+  device_id?: string | null
+}
+
+export interface DeviceRegistrationResponse extends Device {
+  api_key: string
 }

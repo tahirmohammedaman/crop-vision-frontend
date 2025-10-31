@@ -44,8 +44,8 @@ export function LoginPage() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-  const token = await authApi.login(values)
-  setAuth(token)
+      const token = await authApi.login(values)
+      setAuth(token)
       toast.success('Logged in')
       navigate(redirectTarget ?? '/upload', { replace: true })
     } catch (e: any) {
