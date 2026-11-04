@@ -10,13 +10,32 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: { DEFAULT: '1rem', sm: '1.5rem', lg: '2rem' },
       screens: {
         '2xl': '1400px',
       },
     },
     extend: {
+      fontFamily: {
+        sans: [
+          'system-ui',
+          '-apple-system',
+          '"Segoe UI"',
+          'Roboto',
+          '"Noto Sans Ethiopic"',
+          '"Nyala"',
+          '"Abyssinica SIL"',
+          'Ubuntu',
+          '"Helvetica Neue"',
+          'Arial',
+          'sans-serif',
+        ],
+      },
       colors: {
+        likely: { DEFAULT: 'hsl(var(--likely))', tint: 'hsl(var(--likely-tint))' },
+        possible: { DEFAULT: 'hsl(var(--possible))', tint: 'hsl(var(--possible-tint))' },
+        unsure: { DEFAULT: 'hsl(var(--unsure))', tint: 'hsl(var(--unsure-tint))' },
+        shell: { DEFAULT: 'hsl(var(--shell))', foreground: 'hsl(var(--shell-foreground))' },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

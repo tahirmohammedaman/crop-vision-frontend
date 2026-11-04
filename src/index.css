@@ -4,56 +4,125 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Specimen-sheet palette. Light is the default because the use scene is a
+ * phone in direct sun; every text pair below clears 7:1 except the verdict
+ * hues on tinted fills (>= 5.2:1), which always carry an icon and a word.
+ */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 150 20% 98%;
+    --foreground: 160 30% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 160 30% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 142.1 76% 36.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142.1 76% 36.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 160 30% 8%;
+    --primary: 152 62% 24%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 150 18% 93%;
+    --secondary-foreground: 160 30% 10%;
+    --muted: 150 16% 94%;
+    --muted-foreground: 160 12% 30%;
+    --accent: 150 22% 92%;
+    --accent-foreground: 160 30% 10%;
+    --destructive: 4 72% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 12% 84%;
+    --input: 150 10% 62%;
+    --ring: 152 62% 24%;
+    --radius: 0.75rem;
+
+    /* Verdict tiers: ink colour + tinted fill */
+    --likely: 152 62% 24%;
+    --likely-tint: 150 45% 93%;
+    --possible: 34 90% 28%;
+    --possible-tint: 40 90% 93%;
+    --unsure: 4 72% 40%;
+    --unsure-tint: 6 80% 95%;
+
+    --shell: 152 62% 20%;
+    --shell-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 142.1 70% 45.3%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142.1 70% 45.3%;
+    --background: 160 25% 7%;
+    --foreground: 150 20% 95%;
+    --card: 160 20% 10%;
+    --card-foreground: 150 20% 95%;
+    --popover: 160 20% 10%;
+    --popover-foreground: 150 20% 95%;
+    --primary: 148 58% 52%;
+    --primary-foreground: 160 30% 6%;
+    --secondary: 160 14% 17%;
+    --secondary-foreground: 150 20% 95%;
+    --muted: 160 14% 15%;
+    --muted-foreground: 150 10% 72%;
+    --accent: 160 14% 18%;
+    --accent-foreground: 150 20% 95%;
+    --destructive: 6 85% 68%;
+    --destructive-foreground: 160 30% 6%;
+    --border: 160 12% 22%;
+    --input: 160 10% 40%;
+    --ring: 148 58% 52%;
+
+    --likely: 148 58% 52%;
+    --likely-tint: 152 40% 14%;
+    --possible: 40 90% 62%;
+    --possible-tint: 36 50% 14%;
+    --unsure: 6 85% 68%;
+    --unsure-tint: 4 45% 15%;
+
+    --shell: 160 22% 11%;
+    --shell-foreground: 150 20% 95%;
   }
 
   * {
     @apply border-border;
   }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
-    @apply bg-background text-foreground; 
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'tnum' 0;
+  }
+  ::selection {
+    background: hsl(var(--primary) / 0.22);
+    color: hsl(var(--foreground));
+  }
+  input,
+  textarea {
+    caret-color: hsl(var(--primary));
+  }
+  :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* The analysing sweep over the leaf photo. Reduced motion keeps a static tint. */
+@keyframes leaf-sweep {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(260%);
+  }
+}
+.leaf-sweep {
+  animation: leaf-sweep 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .leaf-sweep {
+    animation: none;
+    transform: none;
+    height: 100%;
+    opacity: 0.35;
   }
 }
