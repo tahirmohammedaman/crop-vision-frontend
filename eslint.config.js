@@ -16,6 +16,8 @@ export default [
     plugins: { '@typescript-eslint': tseslint },
     rules: {
       ...js.configs.recommended.rules,
+      // Core rule misreads TS type-signature params; the TS-aware rule below covers it.
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
