@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Accordion } from '@/components/ui/accordion'
@@ -10,7 +9,7 @@ import * as React from 'react'
 import heroPreview from '@/../catalog-data/tomato_leaf_mold_hero.jpg'
 
 export function LandingPage() {
-  const [stats, setStats] = React.useState(() => ({
+  const [stats] = React.useState(() => ({
     imagesToday: 76,
     accuracy: 99.2,
     cropsTracked: 14,
